@@ -132,6 +132,8 @@ make test
 
 If all tests run you're ready do go
 
+In development you can either just run `bash main.sh` or execute `make build` and run the compiled script `./build/ssh-tunnel-swarm`
+
 ## TODO
 
 - add support for specifying keys for each host
