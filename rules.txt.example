@@ -1,0 +1,29 @@
+jsmith@host123:23456
+reverse host123.example.com:6000:10.0.0.5:7000
+forward 10.0.0.1:8081:host123.example.com:9090
+reverse 192.168.0.10:1234:host123.example.com:5678
+
+mjohnson@host456:56789
+reverse host456.example.com:8080:192.168.0.10:80
+forward 192.168.0.5:9999:host456.example.com:3333
+reverse 172.16.0.5:5678:host456.example.com:1234
+forward host456.example.com:4321:192.168.0.10:9876
+forward host123.example.com:9876:10.0.0.5:4321
+
+aparker@host789:34567
+reverse host789.example.com:5432:172.16.0.5:5432
+
+sjones@host012:67890
+reverse host012.example.com:3000:10.20.30.40:3000
+forward 172.20.0.2:6060:host012.example.com:4444
+reverse 10.0.0.5:5678:host789.example.com:1234
+forward host789.example.com:9876:172.16.0.5:4321
+
+rbrown@host345:45678
+reverse host345.example.com:5555:192.168.1.30:9000
+forward 10.1.1.5:5050:host345.example.com:8080
+reverse 192.168.1.30:2345:host345.example.com:6789
+forward host345.example.com:9876:192.168.1.30:5432
+reverse 192.168.0.10:7890:host012.example.com:3456
+forward host012.example.com:6543:10.20.30.40:9876
+forward 172.16.0.10:7070:host789.example.com:7777

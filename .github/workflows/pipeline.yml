@@ -1,0 +1,63 @@
+name: pipeline
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Run shellcheck
+        uses: ludeeus/action-shellcheck@master
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Test
+        run: make test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: make build
+
+      - name: Cache the build artifacts
+        if: contains(github.ref, 'refs/tags/')
+        uses: actions/cache@v3
+        with:
+          path: build
+          key: build-${{ hashFiles('**/*', '!build', '!.git') }}
+          restore-keys: |
+            build-
+
+  release:
+    if: contains(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Restore build artifacts
+        uses: actions/cache@v3
+        with:
+          path: build
+          key: build-${{ hashFiles('**/*', '!build', '!.git') }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          files: |
+            build/ssh-tunnel-swarm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
