@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 # Load logger functions
 source logger.sh
 # Load tunnel rules

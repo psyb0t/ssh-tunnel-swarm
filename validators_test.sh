@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 # Source the common test functions
 source common_test.sh
 # Source the bash file containing the functions to be tested
