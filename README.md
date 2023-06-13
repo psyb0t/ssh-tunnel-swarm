@@ -63,6 +63,15 @@ reverse localhost:8080:0.0.0.0:80
 
 Now when you access both http://myvps.com/ and http://myothervps.com/ you'll access your local service.
 
+**Set up a forward tunnel from a remote machine to your computer**
+
+```
+user@enterprise.com:22
+forward localhost:6366:10.137.82.201:636
+```
+
+Now guess what happens when you try to connect to localhost:6366.
+
 ## Usage
 
 - coming up soon
