@@ -5,9 +5,12 @@ source logger.sh
 # Load validator functions
 source validators.sh
 
+# Set default rules file to rules.txt if it's not already set
+: "${RULES_FILE:=rules.txt}"
+
 declare -A RULES
 
-# This function loads the rules from rules.txt file into an associative array called RULES.
+# This function loads the rules from the rules file into an associative array called RULES.
 # The format of the rules file is:
 # <username>@<hostname/IP address>:<port>
 # <forward/reverse> <local address>:<local port>:<remote address>:<remote port>
@@ -18,13 +21,13 @@ declare -A RULES
 load_rules() {
     logger "DEBUG" "Starting load_rules function"
 
-    # Check if rules.txt exists and has content
-    if [ ! -f "rules.txt" ]; then
-        logger "FATAL" "rules.txt not found"
+    # Check if the rules file exists and has content
+    if [ ! -f "$RULES_FILE" ]; then
+        logger "FATAL" "Rules file \"$RULES_FILE\" not found"
     fi
 
-    if [ ! -s "rules.txt" ]; then
-        logger "FATAL" "rules.txt is empty"
+    if [ ! -s "$RULES_FILE" ]; then
+        logger "FATAL" "Rules file \"$RULES_FILE\" is empty"
     fi
 
     # Variable to keep track of the current host being processed
@@ -82,7 +85,7 @@ load_rules() {
             # Log an error for invalid lines
             logger "FATAL" "Invalid line in rules file: $line in line $line_no"
         fi
-    done <rules.txt
+    done <"$RULES_FILE"
 
     logger "DEBUG" "load_rules function finished"
 }

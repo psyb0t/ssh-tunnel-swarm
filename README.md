@@ -154,15 +154,17 @@ sudo mv ssh-tunnel-swarm /usr/bin/
 
 ### Environment Variables
 
+- **RULES_FILE**: This can be used to specify the path to the file containing the tunnel rules. If this variable is not set, the default file path is set to `rules.txt`.
+
 - **LOG_ENABLED**: This acts as a master switch for the logger. If it's set to `1`, logging is enabled. A value of `0` disables logging. Default value if not set is `1`.
 
 - **LOG_FILE**: This determines the output destination of the log messages. If set, log messages will be written to the specified file. If not set, logs will be printed to stdout.
 
-- **LOG_LEVEL**: This determines the severity level of the messages to be logged. Messages with a severity level less than this will not be logged. For example, if `LOG_LEVEL` is set to `INFO`, then `DEBUG` messages won't be logged. Default value if not set is `DEBUG`.
+- **LOG_LEVEL**: This determines the severity level of the messages to be logged. Messages with a severity level less than this will not be logged. For example, if `LOG_LEVEL` is set to `INFO`, then `DEBUG` messages won't be logged. Default value if not set is `DEBUG`. You can find all of the [supported log levels here](#supported-log-levels).
 
 ### Tunnel Rules
 
-SSH Tunnel Swarm reads the tunnel rules from a file named `rules.txt` which contains the rules for each host. Each entry should include the username, hostname, port, and the tunnels to establish. For instance:
+SSH Tunnel Swarm reads the tunnel rules for each host from a file specified by the `RULES_FILE` environment variable. Each entry within the file should include the username, hostname, port, and the tunnels to establish. For instance:
 
 ```
 aparker@host789:34567
@@ -215,7 +217,13 @@ Now guess what happens when you try to connect to localhost:6366.
 
 ## Usage
 
-- coming up soon
+```shell
+RULES_FILE=/path/to/rules.txt \
+LOG_ENABLED=1 \
+LOG_FILE=/path/to/log/file \
+LOG_LEVEL=DEBUG \
+ssh-tunnel-swarm
+```
 
 ## Logging
 
