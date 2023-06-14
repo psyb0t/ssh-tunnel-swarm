@@ -193,14 +193,6 @@ SSH Tunnel Swarm includes a logging functionality that provides visibility into 
 
 It is designed to enable configurable log levels and output destinations and provides different levels of logging based on the severity of the log message. This is particularly useful in complex scripts or systems where detailed logging is beneficial for development, debugging, or ongoing system maintenance.
 
-## Environment Variables
-
-- **LOG_ENABLED**: This acts as a master switch for the logger. If it's set to `1`, logging is enabled. A value of `0` disables logging. Default value if not set is `1`.
-
-- **LOG_FILE**: This determines the output destination of the log messages. If set, log messages will be written to the specified file. If not set, logs will be printed to stdout.
-
-- **LOG_LEVEL**: This determines the severity level of the messages to be logged. Messages with a severity level less than this will not be logged. For example, if `LOG_LEVEL` is set to `INFO`, then `DEBUG` messages won't be logged. Default value if not set is `DEBUG`.
-
 ### Supported Log Levels
 
 The logger recognizes four levels of logging:
@@ -212,6 +204,14 @@ The logger recognizes four levels of logging:
 - **ERROR**: These are messages that indicate a problem that prevented a function or process from completing successfully.
 
 - **FATAL**: These messages indicate a severe problem that has caused the application to stop. They require immediate attention.
+
+## Environment Variables
+
+- **LOG_ENABLED**: This acts as a master switch for the logger. If it's set to `1`, logging is enabled. A value of `0` disables logging. Default value if not set is `1`.
+
+- **LOG_FILE**: This determines the output destination of the log messages. If set, log messages will be written to the specified file. If not set, logs will be printed to stdout.
+
+- **LOG_LEVEL**: This determines the severity level of the messages to be logged. Messages with a severity level less than this will not be logged. For example, if `LOG_LEVEL` is set to `INFO`, then `DEBUG` messages won't be logged. Default value if not set is `DEBUG`.
 
 ## Important Notes
 
