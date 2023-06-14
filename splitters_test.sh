@@ -5,13 +5,61 @@ source common_test.sh
 # Source the bash file containing the functions to be tested
 source splitters.sh
 
+# Test function for split_user_host_port_key
+test_split_user_host_port_key() {
+    # Test with valid user_host_port_key
+    test_split_user_host_port_key_with_valid_input() {
+        local input="valid-user@valid.host.com:1234=/valid/path/to/key"
+        local expected_output=("valid-user@valid.host.com:1234" "/valid/path/to/key")
+        assert_equals "$(split_user_host_port_key $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
+        assert_no_error $? "${FUNCNAME[0]}"
+    }
+    test_split_user_host_port_key_with_valid_input
+
+    # Test with empty input
+    test_split_user_host_port_key_with_empty_input() {
+        local input=""
+        local expected_output=()
+        local expected_return_code=1
+        assert_is_error "$(
+            split_user_host_port_key "$input"
+            echo $?
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
+    }
+    test_split_user_host_port_key_with_empty_input
+
+    # Test with missing key
+    test_split_user_host_port_key_with_missing_key() {
+        local input="bob@example.com:22="
+        local expected_output=()
+        local expected_return_code=1
+        assert_is_error "$(
+            split_user_host_port_key $input
+            echo $?
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
+    }
+    test_split_user_host_port_key_with_missing_key
+
+    # Test with missing user_host_port
+    test_split_user_host_port_key_with_missing_user_host_port() {
+        local input="=/path/to/key"
+        local expected_output=()
+        local expected_return_code=1
+        assert_is_error "$(
+            split_user_host_port_key $input
+            echo $?
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
+    }
+    test_split_user_host_port_key_with_missing_user_host_port
+}
+
 # Test function for split_user_host_port
 test_split_user_host_port() {
     # Test with hostname
     test_split_user_host_port_with_hostname() {
         local input="john@example.com:22"
         local expected_output=("john@example.com" "22")
-        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with hostname"
+        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_hostname
@@ -20,7 +68,7 @@ test_split_user_host_port() {
     test_split_user_host_port_with_ip() {
         local input="alice@192.168.1.10:8080"
         local expected_output=("alice@192.168.1.10" "8080")
-        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP address"
+        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_ip
@@ -29,7 +77,7 @@ test_split_user_host_port() {
     test_split_user_host_port_with_localhost() {
         local input="root@localhost:3306"
         local expected_output=("root@localhost" "3306")
-        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with localhost"
+        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_localhost
@@ -42,7 +90,7 @@ test_split_user_host_port() {
         assert_is_error "$(
             split_user_host_port "$input"
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with empty input"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_empty_input
 
@@ -54,7 +102,7 @@ test_split_user_host_port() {
         assert_is_error "$(
             split_user_host_port $input
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with missing port"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_missing_port
 }
@@ -65,7 +113,7 @@ test_split_user_host() {
     test_split_user_host_with_hostname() {
         local input="john@example.com"
         local expected_output=("john" "example.com")
-        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with hostname"
+        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_with_hostname
@@ -74,7 +122,7 @@ test_split_user_host() {
     test_split_user_host_with_ip() {
         local input="alice@192.168.1.10"
         local expected_output=("alice" "192.168.1.10")
-        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP address"
+        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_with_ip
@@ -83,7 +131,7 @@ test_split_user_host() {
     test_split_user_host_with_localhost() {
         local input="root@localhost"
         local expected_output=("root" "localhost")
-        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with localhost"
+        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_with_localhost
@@ -96,7 +144,7 @@ test_split_user_host() {
         assert_is_error "$(
             split_user_host "$input"
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with empty input"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_user_host_with_empty_input
 
@@ -108,7 +156,7 @@ test_split_user_host() {
         assert_is_error "$(
             split_user_host $input
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with missing hostname"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_missing_hostname
 }
@@ -119,7 +167,7 @@ test_split_interface_ports() {
     test_split_interface_ports_ips() {
         local input="192.168.1.2:8080:192.168.1.100:80"
         local expected_output=("192.168.1.2" "8080" "192.168.1.100" "80")
-        assert_equals "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP addresses"
+        assert_equals "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_interface_ports_ips
@@ -128,7 +176,7 @@ test_split_interface_ports() {
     test_split_interface_ports_mixed_hostnames() {
         local input="localhost:80:test.com.test:2048"
         local expected_output=("localhost" "80" "test.com.test" "2048")
-        assert_equals "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with mixed hostnames"
+        assert_equals "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_interface_ports_mixed_hostnames
@@ -141,7 +189,7 @@ test_split_interface_ports() {
         assert_is_error "$(
             split_interface_ports "$input"
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with empty input"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_interface_ports_with_empty_input
 
@@ -153,7 +201,7 @@ test_split_interface_ports() {
         assert_is_error "$(
             split_interface_ports $input
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with missing local port"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_interface_ports_with_missing_local_port
 
@@ -165,12 +213,13 @@ test_split_interface_ports() {
         assert_is_error "$(
             split_interface_ports $input
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with missing remote interface"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_split_interface_ports_with_missing_remote_interface
 }
 
 # Run all test functions
+test_split_user_host_port_key
 test_split_user_host_port
 test_split_user_host
 test_split_interface_ports

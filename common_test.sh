@@ -1,10 +1,11 @@
 #!/bin/bash
 # Function to print a failure message
 print_failure() {
-    local message="$1"
-    local expected="$2"
-    local actual="$3"
-    local is_error_check="$4"
+    local function_name="$1"
+    local message="$2"
+    local expected="$3"
+    local actual="$4"
+    local is_error_check="$5"
 
     local check_type
     if [[ "$is_error_check" -eq 1 ]]; then
@@ -13,15 +14,16 @@ print_failure() {
         check_type="Equality check"
     fi
 
-    echo "FAIL - Test failed: $message. $check_type. Expected '$expected', but got '$actual'"
+    echo "FAIL - ${function_name}: assert failed: $message. $check_type. Expected '$expected', but got '$actual'"
     exit 1
 }
 
 # Function to print a success message
 print_success() {
-    local message="$1"
+    local function_name="$1"
+    local message="$2"
 
-    echo "OK - Test passed: $message"
+    echo "OK - ${function_name}: assert passed: $message"
 }
 
 # Assert function to check if actual and expected values are the same
@@ -31,9 +33,9 @@ assert_equals() {
     local message="$3"
 
     if [[ "$actual" == "$expected" ]]; then
-        print_success "$message"
+        print_success "${FUNCNAME[0]}" "$message"
     else
-        print_failure "$message" "$expected" "$actual" 0
+        print_failure "${FUNCNAME[0]}" "$message" "$expected" "$actual" 0
     fi
 }
 
@@ -44,9 +46,9 @@ assert_is_error() {
     local message="$3"
 
     if [[ "$actual" -eq "$expected" ]]; then
-        print_success "$message"
+        print_success "${FUNCNAME[0]}" "$message"
     else
-        print_failure "$message" "$expected" "$actual" 1
+        print_failure "${FUNCNAME[0]}" "$message" "$expected" "$actual" 1
     fi
 }
 
@@ -56,8 +58,8 @@ assert_no_error() {
     local message="$2"
 
     if [[ "$actual" -eq 0 ]]; then
-        print_success "$message"
+        print_success "${FUNCNAME[0]}" "$message"
     else
-        print_failure "$message" "no error" "$actual" 1
+        print_failure "${FUNCNAME[0]}" "$message" "no error" "$actual" 1
     fi
 }

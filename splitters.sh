@@ -1,4 +1,21 @@
 #!/bin/bash
+# Function to split a user, host, port and key combination and returns the user/host/port and key separately.
+# Accepts one parameter:
+# $1 - user_host_port_key: A string containing the username, hostname, port number and key path, separated by equals sign. Example: "john@example.com:22=/path/to/key"
+# Returns:
+#   0 - on success
+#   1 - if user_host_port or key is empty
+split_user_host_port_key() {
+    local user_host_port_key="$1"
+    local IFS="="
+    read -r user_host_port key <<<"${user_host_port_key}"
+    if [[ -z "$user_host_port" || -z "$key" ]]; then
+        return 1
+    fi
+    echo "$user_host_port" "$key"
+    return 0
+}
+
 # Function to split a user, host, and port combination and returns the user/host and port separately.
 # Accepts one parameter:
 # $1 - user_host_port: A string containing the username, hostname, and port number to connect to, separated by colons. Example: "john@example.com:22"

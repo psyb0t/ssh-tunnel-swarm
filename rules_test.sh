@@ -13,7 +13,7 @@ test_check_rules_file() {
         temp_file=$(mktemp /tmp/rules.XXXXXX)
         touch "$temp_file"
         chmod u+r "$temp_file"
-        assert_no_error "$(check_rules_file "$temp_file")" "${FUNCNAME[0]}: test with existing and readable file"
+        assert_no_error "$(check_rules_file "$temp_file")" "${FUNCNAME[0]}"
         rm "$temp_file"
     }
     test_check_rules_file_with_existing_readable_file
@@ -27,7 +27,7 @@ test_check_rules_file() {
         assert_is_error "$(
             check_rules_file "$temp_file"
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with non-existent file"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
     }
     test_check_rules_file_with_nonexistent_file
 
@@ -41,7 +41,7 @@ test_check_rules_file() {
         assert_is_error "$(
             check_rules_file "$temp_file"
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with non-readable file"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
         rm "$temp_file"
     }
     test_check_rules_file_with_nonreadable_file
@@ -54,7 +54,7 @@ test_check_rules_file() {
         assert_is_error "$(
             check_rules_file "$temp_file"
             echo $?
-        )" "${expected_return_code}" "${FUNCNAME[0]}: test with empty file"
+        )" "${expected_return_code}" "${FUNCNAME[0]}"
         rm "$temp_file"
     }
     test_check_rules_file_with_empty_file

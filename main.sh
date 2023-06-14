@@ -15,21 +15,26 @@ load_rules
 # $1 - user_host_port: A string containing the username, hostname, and port number to connect to, separated by colons. Example: "john@example.com:22"
 # $2 - raw_tunnel_rules: A string containing semicolon-separated tunnel rules, where each tunnel rule is in the format "direction interface_ports", separated by spaces. Example: "forward 8080:localhost:80;reverse 2222:localhost:22"
 establish_ssh_connection() {
-    local user_host_port="$1"
+    local user_host_port_key="$1"
     local raw_tunnel_rules="$2"
+    local user_host_port
+    local key
     local IFS=" "
 
+    logger "DEBUG" "Splitting user_host_port and key from: $user_host_port_key"
+    read -r user_host_port key <<<"$(split_user_host_port_key "$user_host_port_key")"
+    logger "DEBUG" "Got user_host_port and key: $user_host_port, $key"
+
     logger "DEBUG" "Splitting user, host and port from: $user_host_port"
-    # Split the username, hostname, and port number from the user_host_port string
     read -r user_host port <<<"$(split_user_host_port "$user_host_port")"
     logger "DEBUG" "Got user_host and port: $user_host, $port"
 
     logger "DEBUG" "Splitting user and host from: $user_host"
-    # Split the username and hostname from the user_host string
     read -r user host <<<"$(split_user_host "$user_host")"
     logger "DEBUG" "Got user and host: $user, $host"
 
     logger "DEBUG" "Processing raw tunnel rules: $raw_tunnel_rules"
+
     # Split the tunnel rules into an array
     IFS=';'
     read -ra tunnel_rules <<<"$raw_tunnel_rules"
@@ -75,9 +80,9 @@ establish_ssh_connection() {
         # Convert the ssh_tunnel_parameters string and other connection details into the SSH command
         IFS=' '
         read -ra split_ssh_tunnel_parameters <<<"$ssh_tunnel_parameters"
-        logger "DEBUG" "Executing ssh command ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no" "${split_ssh_tunnel_parameters[@]}" "-p" "${port}" "${user}@${host}"
+        logger "DEBUG" "Executing ssh command ssh -N -i ${key} -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes" "${split_ssh_tunnel_parameters[@]}" "-p" "${port}" "${user}@${host}"
         # Establish an SSH connection and create the tunnels
-        ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no "${split_ssh_tunnel_parameters[@]}" -p "${port}" "${user}@${host}" >"$temp_file" 2>&1
+        ssh -N -i "$key" -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes "${split_ssh_tunnel_parameters[@]}" -p "${port}" "${user}@${host}" >"$temp_file" 2>&1
 
         local ssh_exit_status=$?
         local ssh_output
@@ -109,16 +114,16 @@ declare -A HOST_PIDS
 kill_ssh_connections() {
     logger "INFO" "Killing SSH connections"
     # Loop through each connection and kill the SSH process and its children
-    for user_host_port in "${!SUBSHELL_PIDS[@]}"; do
-        # Extract the hostname from the user_host_port string
-        local host=${user_host_port%:*}
+    for user_host_port_key in "${!SUBSHELL_PIDS[@]}"; do
+        # Extract the hostname from the user_host_port_key string
+        local user_host=${user_host_port_key%:*}
         # Get the subshell PID for the connection
-        local subshell_pid=${SUBSHELL_PIDS[$user_host_port]}
+        local subshell_pid=${SUBSHELL_PIDS[$user_host_port_key]}
 
-        logger "INFO" "Killing SSH process for host $host (PID: $subshell_pid)"
+        logger "INFO" "Killing SSH process for user_host $user_host (PID: $subshell_pid)"
         # Kill the subshell process and its children
         kill "$subshell_pid" 2>/dev/null
-        kill "${HOST_PIDS[$user_host_port]}" 2>/dev/null
+        kill "${HOST_PIDS[$user_host_port_key]}" 2>/dev/null
     done
 
     # Log an exiting message and exit the script
@@ -128,17 +133,17 @@ kill_ssh_connections() {
 
 # Main function to start SSH connections based on the pre-defined rules
 main() {
-    # Loop through each user_host_port and start a connection in the background
-    for user_host_port in "${!RULES[@]}"; do
+    # Loop through each user_host_port_key and start a connection in the background
+    for user_host_port_key in "${!RULES[@]}"; do
         (
-            establish_ssh_connection "$user_host_port" "${RULES[$user_host_port]}"
+            establish_ssh_connection "$user_host_port_key" "${RULES[$user_host_port_key]}"
         ) &
 
         # Record the process IDs for the connection
-        SUBSHELL_PIDS["$user_host_port"]=$!
-        HOST_PIDS["$user_host_port"]=$(pgrep -P "${SUBSHELL_PIDS[$user_host_port]}")
+        SUBSHELL_PIDS["$user_host_port_key"]=$!
+        HOST_PIDS["$user_host_port_key"]=$(pgrep -P "${SUBSHELL_PIDS[$user_host_port_key]}")
 
-        logger "DEBUG" "SSH connection started for host ${user_host_port%:*} (PID: ${SUBSHELL_PIDS[$user_host_port]}, HOST PID: ${HOST_PIDS[$user_host_port]})."
+        logger "DEBUG" "SSH connection started for host ${user_host_port_key%:*} (PID: ${SUBSHELL_PIDS[$user_host_port_key]}, HOST PID: ${HOST_PIDS[$user_host_port_key]})."
     done
 
     # Register the signal handlers for killing SSH connections

@@ -12,24 +12,27 @@ declare -A RULES
 
 # This function checks if the rules file exists, is readable, and has non-zero size
 # It logs ERROR errors for any failed checks and returns a non-zero status
+# Accepts one parameter:
+# $1 - rules_file: A string containing the path to the rules file
 # Return values:
 #   0 - on success
 #   1 - if any of the checks fail (file not found, no read permissions, or empty file).
 check_rules_file() {
+    local rules_file="$1"
     logger "DEBUG" "Starting check_rules_file function"
 
-    if [ ! -f "$RULES_FILE" ]; then
-        logger "ERROR" "Rules file \"$RULES_FILE\" not found"
+    if [ ! -f "$rules_file" ]; then
+        logger "ERROR" "Rules file \"$rules_file\" not found"
         return 1
     fi
 
-    if [ ! -r "$RULES_FILE" ]; then
-        logger "ERROR" "Current user does not have read permissions on rules file \"$RULES_FILE\""
+    if [ ! -r "$rules_file" ]; then
+        logger "ERROR" "Current user does not have read permissions on rules file \"$rules_file\""
         return 1
     fi
 
-    if [ ! -s "$RULES_FILE" ]; then
-        logger "ERROR" "Rules file \"$RULES_FILE\" is empty"
+    if [ ! -s "$rules_file" ]; then
+        logger "ERROR" "Rules file \"$rules_file\" is empty"
         return 1
     fi
 
@@ -47,7 +50,7 @@ check_rules_file() {
 load_rules() {
     logger "DEBUG" "Starting load_rules function"
 
-    if ! check_rules_file; then
+    if ! check_rules_file "$RULES_FILE"; then
         logger "FATAL" "Rules file checks failed"
     fi
 
@@ -70,23 +73,39 @@ load_rules() {
 
         # If the line matches the username@hostname:port pattern, extract the username,
         # hostname, and port and create a new key in RULES
-        if [[ "$line" =~ ^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+:[0-9]+)$ ]]; then
+        if [[ "$line" =~ ^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+:[0-9]+)=\/[a-zA-Z0-9._\/-]+$ ]]; then
+            local ssh_key_path
+            local username_host_port
+            # Extract the username@hostname:port combo and ssh key path
+            IFS='=' read -r username_host_port ssh_key_path <<<"$line"
+
+            # Checking if ssh_key_path exists
+            if [ ! -f "$ssh_key_path" ]; then
+                logger "FATAL" "SSH private key file not found: $ssh_key_path"
+            fi
+
             local username
             local host_port
-            # Extract the username and validate it
-            username="${line%@*}"
+            # Extract the username and host_port combo
+            IFS='@' read -r username host_port <<<"$username_host_port"
+
+            # Validate username
             if ! is_valid_username "$username"; then
                 logger "FATAL" "Invalid username: $username in line $line_no"
             fi
 
-            # Extract the hostname/IP address and validate it
-            host_port="${line#*@}"
-            if ! is_valid_hostname_or_ip "${host_port%:*}"; then
+            local host
+            local port
+            # Extract the host and port
+            IFS=':' read -r host port <<<"$host_port"
+
+            # Validate host
+            if ! is_valid_hostname_or_ip "$host"; then
                 logger "FATAL" "Invalid hostname/IP address: ${host_port%:*} in line $line_no"
             fi
 
-            # Extract the port and validate it
-            if ! is_valid_port "${host_port#*:}"; then
+            # Validate the port
+            if ! is_valid_port "$port"; then
                 logger "FATAL" "Invalid port: ${host_port#*:} in line $line_no"
             fi
 

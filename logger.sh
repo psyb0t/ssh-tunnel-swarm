@@ -1,6 +1,6 @@
 #!/bin/bash
-# Set default log level to DEBUG if it's not already set
-: "${LOG_LEVEL:=DEBUG}"
+# Set default log level to INFO if it's not already set
+: "${LOG_LEVEL:=INFO}"
 # Set default log enabled flag only if it's not been set before
 : "${LOG_ENABLED:=1}"
 # Set default log file if it's not already set

@@ -14,5 +14,8 @@ build:
 clean:
 	@rm -rf build
 
+run:
+	@bash main.sh
+
 test:
 	@./test.sh
