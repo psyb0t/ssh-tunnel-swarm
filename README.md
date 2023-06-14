@@ -25,7 +25,6 @@ The script supports the configuration of multiple SSH connections and can establ
 
 ## Features
 
-- Easy setup and usage with shell script.
 - Allows multiple SSH connections with each connection potentially handling multiple tunnels.
 - Logging functionality for better visibility and debugging.
 - Easily configurable rule sets for the creation of SSH tunnels.
