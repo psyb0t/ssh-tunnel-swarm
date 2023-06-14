@@ -6,6 +6,26 @@ SSH Tunnel Swarm is a powerful shell script tool for managing multiple SSH tunne
 
 The script supports the configuration of multiple SSH connections and can establish tunnels based on defined rules.
 
+## Table of Contents
+
+- [SSH Tunnel Swarm](#ssh-tunnel-swarm)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [Installing for the current user](#installing-for-the-current-user)
+    - [Installing for all users](#installing-for-all-users)
+  - [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
+    - [Tunnel Rules](#tunnel-rules)
+  - [Usage](#usage)
+  - [Logging](#logging)
+    - [Supported Log Levels](#supported-log-levels)
+  - [Important Notes](#important-notes)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [TODO](#todo)
+  - [Glossary](#glossary)
+
 ## Features
 
 - Easy setup and usage with shell script.
@@ -91,7 +111,7 @@ wget -qO- https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools
 
 After the download is complete, you can use `ssh-tunnel-swarm` from the current location by executing `./ssh-tunnel-swarm` but a true installation allows you to use it from any directory.
 
-### Installing for the current user only
+### Installing for the current user
 
 ```shell
 mkdir ~/bin
@@ -132,7 +152,17 @@ sudo mv ssh-tunnel-swarm /usr/bin/
 
 ## Configuration
 
-SSH Tunnel Swarm reads its configuration from a file named `rules.txt` which contains the tunnel rules for each host. Each entry should include the username, hostname, port, and the tunnels to establish. For instance:
+### Environment Variables
+
+- **LOG_ENABLED**: This acts as a master switch for the logger. If it's set to `1`, logging is enabled. A value of `0` disables logging. Default value if not set is `1`.
+
+- **LOG_FILE**: This determines the output destination of the log messages. If set, log messages will be written to the specified file. If not set, logs will be printed to stdout.
+
+- **LOG_LEVEL**: This determines the severity level of the messages to be logged. Messages with a severity level less than this will not be logged. For example, if `LOG_LEVEL` is set to `INFO`, then `DEBUG` messages won't be logged. Default value if not set is `DEBUG`.
+
+### Tunnel Rules
+
+SSH Tunnel Swarm reads the tunnel rules from a file named `rules.txt` which contains the rules for each host. Each entry should include the username, hostname, port, and the tunnels to establish. For instance:
 
 ```
 aparker@host789:34567
@@ -205,14 +235,6 @@ The logger recognizes four levels of logging:
 
 - **FATAL**: These messages indicate a severe problem that has caused the application to stop. They require immediate attention.
 
-## Environment Variables
-
-- **LOG_ENABLED**: This acts as a master switch for the logger. If it's set to `1`, logging is enabled. A value of `0` disables logging. Default value if not set is `1`.
-
-- **LOG_FILE**: This determines the output destination of the log messages. If set, log messages will be written to the specified file. If not set, logs will be printed to stdout.
-
-- **LOG_LEVEL**: This determines the severity level of the messages to be logged. Messages with a severity level less than this will not be logged. For example, if `LOG_LEVEL` is set to `INFO`, then `DEBUG` messages won't be logged. Default value if not set is `DEBUG`.
-
 ## Important Notes
 
 - SSH Tunnel Swarm does not handle SSH authentication(yet). Please ensure that the necessary SSH key is available(currently only the default one is used).
@@ -222,12 +244,6 @@ The logger recognizes four levels of logging:
 - All SSH connections are established with -o StrictHostKeyChecking=no for convenience. However, this option may expose you to potential security risks.
 
 - Always use this script responsibly and ensure you have the permissions to establish tunnels with your target hosts.
-
-## License
-
-This project is licensed under the terms of the **Do What The Fuck You Want To Public License (WTFPL)**. This license allows you to use the software for any purposes, without any conditions or restrictions unless such restrictions are required by law. You can learn more about the license at http://www.wtfpl.net/about/.
-
-By using this software, you agree to abide by the terms of the **WTFPL**. If you do not agree, please do not use, modify, or distribute the software.
 
 ## Contributing
 
@@ -245,7 +261,28 @@ If all tests run you're ready do go
 
 To execute the script in development you can either just run `bash main.sh` or execute `make build` and run the compiled script `./build/ssh-tunnel-swarm`
 
+## License
+
+This project is licensed under the terms of the **Do What The Fuck You Want To Public License (WTFPL)**. This license allows you to use the software for any purposes, without any conditions or restrictions unless such restrictions are required by law. You can learn more about the license at http://www.wtfpl.net/about/.
+
+By using this software, you agree to abide by the terms of the **WTFPL**. If you do not agree, please do not use, modify, or distribute the software.
+
 ## TODO
 
 - add support for specifying keys for each host
 - add more tests
+
+## Glossary
+
+- **SSH**: Secure Shell is a protocol used to securely connect to a remote server/system.
+- **Tunnel**: In the context of SSH, a tunnel is a route through which the entirety of your data is going to pass.
+- **Forward Tunnel (Local Port Forwarding)**: Forwarding calls for a specific IP and port from the client system to an IP and port on the server system.
+- **Reverse Tunnel (Remote Port Forwarding)**: Allows the server to receive a connection as a client from the client system.
+- **SSH Key**: A way of logging into an SSH/SFTP account using a cryptographic pair of keys, hence providing an alternative way to password-based logins.
+- **Bash**: A shell, or command language interpreter, for the GNU operating system.
+- **Shell Script**: A computer program designed to be run by the Unix shell, a command-line interpreter.
+- **wget**: A free utility for non-interactive download of files from the web. It supports HTTP, HTTPS, and FTP protocols and can retrieve files through HTTP proxies.
+- **PATH**: An environment variable on Unix-like operating systems, DOS, OS/2, and Microsoft Windows, specifying a set of directories where executable programs are located.
+- **$HOME**: An environment variable that displays the path of the home directory of the current user.
+- **WTFPL**: Do What The Fuck You Want To Public License, a very permissive license for software and other scientific or artistic works that offers a huge degree of freedom.
+- **GNU**: Stands for GNU's Not Unix, an extensive collection of free software, which includes the GNU Project, the GNU Operating System, and the GNU General Public License.
