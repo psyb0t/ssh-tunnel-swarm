@@ -1,5 +1,7 @@
 # SSH Tunnel Swarm
 
+![ssh-tunnel-swarm](https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/assets/ssh-tunnel-swarm.png)
+
 SSH Tunnel Swarm is a powerful shell script tool for managing multiple SSH tunnels concurrently. It simplifies the process of creating and managing both forward and reverse SSH tunnels by applying a predefined set of rules for each tunnel.
 
 The script supports the configuration of multiple SSH connections and can establish tunnels based on defined rules. The process is controlled through different shell scripts for logging, rule definition, and data splitting.
@@ -13,11 +15,19 @@ The script supports the configuration of multiple SSH connections and can establ
 - Supports both forward and reverse SSH tunnels.
 - Tunnels are continuously maintained and re-established in case of disconnection.
 
+## Prerequisites
+
+This script is designed to be run in a Unix-like environment.
+
+- **Bash Shell**: The script is written in Bash, so you need to have Bash installed on your system.
+
+- **SSH**: The script uses SSH to establish connections and create tunnels. Make sure you have SSH installed and properly configured on your machine.
+
 ## Installation
 
-SSH Tunnel Swarm is a shell script and thus does not need a traditional installation process. However, you must ensure you have a working SSH client installed on your system. This script is designed to be run in a Unix-like environment.
-
-- coming up soon
+```shell
+wget -qO- https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools/downloader.sh | bash
+```
 
 ## Configuration
 
