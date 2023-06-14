@@ -41,13 +41,13 @@ This script is designed to be run in a Unix-like environment.
 
 ## Installation
 
-Execute the following command to download `ssh-tunnel-swarm`:
+Execute the following command to download ssh-tunnel-swarm:
 
 ```shell
 wget -qO- https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools/downloader.sh | bash
 ```
 
-After the download is complete, you can use `ssh-tunnel-swarm` from the current location by executing `./ssh-tunnel-swarm` but a true installation allows you to use it from any directory.
+After the download is complete, you can use ssh-tunnel-swarm from the current location by executing `./ssh-tunnel-swarm` but a true installation allows you to use it from any directory.
 
 ### Installing for all users
 
@@ -62,7 +62,7 @@ mkdir -p ~/bin
 mv ssh-tunnel-swarm ~/bin/
 ```
 
-In order to execute `ssh-tunnel-swarm` from any directory, the `$HOME/bin` directory needs to be added to your system's `$PATH`. This is because the `$PATH` variable tells the system which directories to search for executable files when you type a command in the terminal. By adding `$HOME/bin` to the `$PATH`, you can run the `ssh-tunnel-swarm` command from any directory without needing to specify the full path.
+In order to execute ssh-tunnel-swarm from any directory, the `$HOME/bin` directory needs to be added to your system's `$PATH`. This is because the `$PATH` variable tells the system which directories to search for executable files when you type a command in the terminal. By adding `$HOME/bin` to the `$PATH`, you can run the ssh-tunnel-swarm command from any directory without needing to specify the full path.
 
 To check if `$HOME/bin` is already in the `$PATH`, you can execute the following command in your terminal:
 
