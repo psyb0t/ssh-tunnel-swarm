@@ -4,7 +4,7 @@
 
 SSH Tunnel Swarm is a powerful shell script tool for managing multiple SSH tunnels concurrently. It simplifies the process of creating and managing both forward and reverse SSH tunnels by applying a predefined set of rules for each tunnel.
 
-The script supports the configuration of multiple SSH connections and can establish tunnels based on defined rules. The process is controlled through different shell scripts for logging, rule definition, and data splitting.
+The script supports the configuration of multiple SSH connections and can establish tunnels based on defined rules.
 
 ## Features
 
