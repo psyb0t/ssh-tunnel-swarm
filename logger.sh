@@ -4,7 +4,7 @@
 # Set default log enabled flag only if it's not been set before
 : "${LOG_ENABLED:=1}"
 # Set default log file if it's not already set
-: "${LOG_FILE:=""}"
+: "${LOG_FILE:=}"
 
 # Declare an associative array to map different log levels with a numerical value
 declare -A log_levels=(
