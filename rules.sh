@@ -27,8 +27,10 @@ load_rules() {
         logger "FATAL" "rules.txt is empty"
     fi
 
-    local current_host="" # Variable to keep track of the current host being processed
-    local line_no=0       # Variable to keep track of the current line number
+    # Variable to keep track of the current host being processed
+    local current_host=""
+    # Variable to keep track of the current line number
+    local line_no=0
 
     # Loop through each line of the rules file
     while IFS= read -r line; do
@@ -37,7 +39,8 @@ load_rules() {
             continue
         fi
 
-        ((line_no++)) # Increment the line number
+        # Increment the line number
+        ((line_no++))
 
         logger "DEBUG" "Processing line $line_no: $line"
 

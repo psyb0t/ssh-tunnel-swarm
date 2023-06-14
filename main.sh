@@ -110,8 +110,10 @@ kill_ssh_connections() {
     logger "INFO" "Killing SSH connections"
     # Loop through each connection and kill the SSH process and its children
     for user_host_port in "${!SUBSHELL_PIDS[@]}"; do
-        local host=${user_host_port%:*}                      # Extract the hostname from the user_host_port string
-        local subshell_pid=${SUBSHELL_PIDS[$user_host_port]} # Get the subshell PID for the connection
+        # Extract the hostname from the user_host_port string
+        local host=${user_host_port%:*}
+        # Get the subshell PID for the connection
+        local subshell_pid=${SUBSHELL_PIDS[$user_host_port]}
 
         logger "INFO" "Killing SSH process for host $host (PID: $subshell_pid)"
         # Kill the subshell process and its children

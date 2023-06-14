@@ -38,7 +38,8 @@ logger() {
 
     # Check if logging is enabled
     if [[ "${LOG_ENABLED}" -lt 1 ]]; then
-        return # Exit the function without printing anything
+        # Exit the function without printing anything
+        return
     fi
 
     # Check if the log level is valid or not
@@ -46,9 +47,11 @@ logger() {
         # Check if the log level is greater than or equal to the current log level
         if ((log_levels[$log_level] >= log_levels[$LOG_LEVEL])); then
             if [[ -n ${LOG_FILE} ]]; then
-                echo "[$dt] [$log_level] $message" >>"$LOG_FILE" # Append to log file
+                # Append to log file
+                echo "[$dt] [$log_level] $message" >>"$LOG_FILE"
             else
-                echo "[$dt] [$log_level] $message" # Print to stdout
+                # Print to stdout
+                echo "[$dt] [$log_level] $message"
             fi
 
             # If the log level is 'FATAL', exit with status code 1

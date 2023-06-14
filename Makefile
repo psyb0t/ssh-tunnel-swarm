@@ -7,8 +7,8 @@ all: build
 
 build:
 	@mkdir -p build
-	@echo '#!/bin/bash' > $(MERGED_SCRIPT)  # Add shebang
-	@cat $(SCRIPTS) | grep -v '^source' >> $(MERGED_SCRIPT)  # Append script contents
+	@echo '#!/bin/bash' > $(MERGED_SCRIPT)
+	@cat $(SCRIPTS) | grep -v '^source' | sed '/^#!/,$$!d' | sed '/^\s*#/d' | sed '/^\s*$$/d' >> $(MERGED_SCRIPT)
 	@chmod +x $(MERGED_SCRIPT)
 
 clean:
