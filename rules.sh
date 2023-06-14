@@ -10,6 +10,32 @@ source validators.sh
 
 declare -A RULES
 
+# This function checks if the rules file exists, is readable, and has non-zero size
+# It logs ERROR errors for any failed checks and returns a non-zero status
+# Return values:
+#   0 - on success
+#   1 - if any of the checks fail (file not found, no read permissions, or empty file).
+check_rules_file() {
+    logger "DEBUG" "Starting check_rules_file function"
+
+    if [ ! -f "$RULES_FILE" ]; then
+        logger "ERROR" "Rules file \"$RULES_FILE\" not found"
+        return 1
+    fi
+
+    if [ ! -r "$RULES_FILE" ]; then
+        logger "ERROR" "Current user does not have read permissions on rules file \"$RULES_FILE\""
+        return 1
+    fi
+
+    if [ ! -s "$RULES_FILE" ]; then
+        logger "ERROR" "Rules file \"$RULES_FILE\" is empty"
+        return 1
+    fi
+
+    logger "DEBUG" "check_rules_file function finished"
+}
+
 # This function loads the rules from the rules file into an associative array called RULES.
 # The format of the rules file is:
 # <username>@<hostname/IP address>:<port>
@@ -21,13 +47,8 @@ declare -A RULES
 load_rules() {
     logger "DEBUG" "Starting load_rules function"
 
-    # Check if the rules file exists and has content
-    if [ ! -f "$RULES_FILE" ]; then
-        logger "FATAL" "Rules file \"$RULES_FILE\" not found"
-    fi
-
-    if [ ! -s "$RULES_FILE" ]; then
-        logger "FATAL" "Rules file \"$RULES_FILE\" is empty"
+    if ! check_rules_file; then
+        logger "FATAL" "Rules file checks failed"
     fi
 
     # Variable to keep track of the current host being processed

@@ -25,7 +25,7 @@ print_success() {
 }
 
 # Assert function to check if actual and expected values are the same
-assert() {
+assert_equals() {
     local actual="$1"
     local expected="$2"
     local message="$3"

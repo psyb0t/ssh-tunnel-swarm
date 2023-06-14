@@ -11,7 +11,7 @@ test_split_user_host_port() {
     test_split_user_host_port_with_hostname() {
         local input="john@example.com:22"
         local expected_output=("john@example.com" "22")
-        assert "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with hostname"
+        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with hostname"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_hostname
@@ -20,7 +20,7 @@ test_split_user_host_port() {
     test_split_user_host_port_with_ip() {
         local input="alice@192.168.1.10:8080"
         local expected_output=("alice@192.168.1.10" "8080")
-        assert "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP address"
+        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP address"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_ip
@@ -29,7 +29,7 @@ test_split_user_host_port() {
     test_split_user_host_port_with_localhost() {
         local input="root@localhost:3306"
         local expected_output=("root@localhost" "3306")
-        assert "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with localhost"
+        assert_equals "$(split_user_host_port $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with localhost"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_port_with_localhost
@@ -65,7 +65,7 @@ test_split_user_host() {
     test_split_user_host_with_hostname() {
         local input="john@example.com"
         local expected_output=("john" "example.com")
-        assert "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with hostname"
+        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with hostname"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_with_hostname
@@ -74,7 +74,7 @@ test_split_user_host() {
     test_split_user_host_with_ip() {
         local input="alice@192.168.1.10"
         local expected_output=("alice" "192.168.1.10")
-        assert "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP address"
+        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP address"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_with_ip
@@ -83,7 +83,7 @@ test_split_user_host() {
     test_split_user_host_with_localhost() {
         local input="root@localhost"
         local expected_output=("root" "localhost")
-        assert "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with localhost"
+        assert_equals "$(split_user_host $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with localhost"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_user_host_with_localhost
@@ -119,7 +119,7 @@ test_split_interface_ports() {
     test_split_interface_ports_ips() {
         local input="192.168.1.2:8080:192.168.1.100:80"
         local expected_output=("192.168.1.2" "8080" "192.168.1.100" "80")
-        assert "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP addresses"
+        assert_equals "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with IP addresses"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_interface_ports_ips
@@ -128,7 +128,7 @@ test_split_interface_ports() {
     test_split_interface_ports_mixed_hostnames() {
         local input="localhost:80:test.com.test:2048"
         local expected_output=("localhost" "80" "test.com.test" "2048")
-        assert "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with mixed hostnames"
+        assert_equals "$(split_interface_ports $input)" "${expected_output[*]}" "${FUNCNAME[0]}: test with mixed hostnames"
         assert_no_error $? "${FUNCNAME[0]}"
     }
     test_split_interface_ports_mixed_hostnames
