@@ -271,6 +271,7 @@ By using this software, you agree to abide by the terms of the **WTFPL**. If you
 
 - add support for specifying keys for each host
 - add more tests
+- add support for specifying a rules file to use
 
 ## Glossary
 
