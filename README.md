@@ -1,6 +1,6 @@
 # ssh-tunnel-swarm
 
-![ssh-tunnel-swarm](https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/assets/ssh-tunnel-swarm.png)
+![ssh-tunnel-swarm](./assets/ssh-tunnel-swarm.png)
 
 ssh-tunnel-swarm is a powerful shell script tool for managing multiple SSH tunnels concurrently. It simplifies the process of creating and managing both forward and reverse SSH tunnels by applying a predefined set of rules for each tunnel.
 
@@ -199,7 +199,7 @@ ssh-tunnel-swarm
 
 ## License
 
-This project is licensed under the terms of the **Do What The Fuck You Want To Public License (WTFPL)**. This license allows you to use the software for any purposes, without any conditions or restrictions unless such restrictions are required by law. You can learn more about the license at http://www.wtfpl.net/about/.
+This software is licensed under the terms of the **Do What The Fuck You Want To Public License (WTFPL)**. This license allows you to use the software for any purposes, without any conditions or restrictions unless such restrictions are required by law. You can learn more about the license at http://www.wtfpl.net/about/.
 
 By using this software, you agree to abide by the terms of the **WTFPL**. If you do not agree, please do not use, modify, or distribute the software.
 
