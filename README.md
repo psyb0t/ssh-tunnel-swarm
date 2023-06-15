@@ -31,13 +31,19 @@ The script supports the configuration of multiple SSH connections and can establ
 - Supports both forward and reverse SSH tunnels.
 - Tunnels are continuously maintained and re-established in case of disconnection.
 
-## Prerequisites
+# Prerequisites
 
-This script is designed to be run in a Unix-like environment.
+**This script is designed to be run in a Unix-like environment.**
 
-- **Bash Shell**: The script is written in Bash, so you need to have Bash installed on your system.
+## General Software Requirements
 
-- **SSH**: The script uses SSH to establish connections and create tunnels. Make sure you have SSH installed and properly configured on your machine.
+- **bash**: The script is written in `bash`, so you need to have `bash` installed on your system.
+- **ssh**: The script uses `ssh` to establish connections and create tunnels. Make sure you have `ssh` installed and properly configured on your machine.
+
+## Downloader Tool Prerequisites
+
+- **jq**: This lightweight and flexible command-line JSON processor is used by the downloader tool to parse data fetched from GitHub. Specifically, it helps identify the most recent version of ssh-tunnel-swarm.
+- **wget**: wget is a versatile utility designed for non-interactive downloading of files from the web. It serves a dual purpose in this case - initially downloading the downloader tool, and subsequently employed by the downloader tool itself to retrieve ssh-tunnel-swarm.
 
 ## Installation
 
