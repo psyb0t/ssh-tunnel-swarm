@@ -58,7 +58,7 @@ After the download is complete, you can use ssh-tunnel-swarm from the current lo
 ### Installing for all users
 
 ```shell
-sudo mv ssh-tunnel-swarm /usr/bin/
+sudo mv ssh-tunnel-swarm /usr/local/bin/
 ```
 
 ### Installing for the current user
