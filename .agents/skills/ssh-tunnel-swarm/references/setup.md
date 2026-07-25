@@ -5,7 +5,7 @@
 - **bash** — the tool is a bash script.
 - **ssh** — used to establish every connection and tunnel; must be installed and
   usable from the shell (keys set up, agent or plain key files).
-- Install-only extras (not needed to run, only to fetch the release binary):
+- Install-only extras (not needed to run, only to fetch the released script):
   - **jq** — `tools/downloader.sh` uses it to parse the GitHub releases API.
   - **wget** — used both to fetch the downloader and, by the downloader, to fetch
     the release asset.
@@ -20,8 +20,9 @@ No password-auth support — key-based SSH only.
 wget -qO- https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools/downloader.sh | bash
 ```
 
-This drops an executable `ssh-tunnel-swarm` binary (a merged single-file build) in
-the current directory. It checks for `jq`/`wget` first and exits with an error
+This drops an executable `ssh-tunnel-swarm` **bash script** in the current
+directory — `make build` concatenates the source scripts into one self-contained
+file and `chmod +x`'s it (a merged single-file build, NOT a compiled binary). It checks for `jq`/`wget` first and exits with an error
 message if either is missing.
 
 Then install it somewhere on `PATH`:
@@ -77,7 +78,7 @@ Other Makefile targets:
 | `LOG_FILE` | unset | If set, log lines are appended to this file instead of stdout. |
 | `LOG_LEVEL` | `INFO` | Minimum severity emitted: `DEBUG` < `INFO` < `ERROR` < `FATAL`. Messages below this level are dropped. |
 
-Invocation pattern — set the vars inline, then run the binary:
+Invocation pattern — set the vars inline, then run the script:
 
 ```shell
 RULES_FILE=/path/to/rules.txt \
