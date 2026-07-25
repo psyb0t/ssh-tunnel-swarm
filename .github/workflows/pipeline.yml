@@ -61,3 +61,11 @@ jobs:
             build/ssh-tunnel-swarm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Publish the skill (.agents/skills/) to ClawHub on tag pushes, after tests pass.
+  publish-to-clawhub:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/')
+    uses: psyb0t/reusable-github-workflows/.github/workflows/clawhub-publish.yml@master
+    secrets:
+      clawhub_token: ${{ secrets.CLAWHUB_TOKEN }}
