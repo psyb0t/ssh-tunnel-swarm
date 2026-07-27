@@ -2,6 +2,10 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v1.4.3 — 2026-07-27
+
+- Added a GitHub Actions CI status badge to the README.
+
 ## v1.4.2 — 2026-07-27
 
 - Added self-hosted version and license badges; wired a badges job into pipeline.yml.

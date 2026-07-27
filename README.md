@@ -1,5 +1,6 @@
 # ssh-tunnel-swarm
 
+[![CI](https://github.com/psyb0t/ssh-tunnel-swarm/actions/workflows/pipeline.yml/badge.svg?branch=master)](https://github.com/psyb0t/ssh-tunnel-swarm/actions/workflows/pipeline.yml)
 [![version](https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/badges/version.svg)](https://github.com/psyb0t/ssh-tunnel-swarm/releases)
 [![license](https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/badges/license.svg)](LICENSE)
 
