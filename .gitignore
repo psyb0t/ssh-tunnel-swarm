@@ -2,3 +2,4 @@ build
 rules.txt
 git-update.sh
 CLAUDE.md
+.telemetry/

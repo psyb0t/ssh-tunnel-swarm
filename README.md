@@ -23,6 +23,7 @@ The script supports the configuration of multiple SSH connections and can establ
   - [Tunnel Rules](#tunnel-rules)
     - [Example](#example)
 - [Usage](#usage)
+- [Agent integrations](#agent-integrations)
 - [Important Notes](#important-notes)
 - [License](#license)
 - [TODO](#todo)
@@ -185,6 +186,35 @@ LOG_ENABLED=1 \
 LOG_FILE=/path/to/log/file \
 LOG_LEVEL=DEBUG \
 ssh-tunnel-swarm
+```
+
+## Agent integrations
+
+The [skill](.agents/skills/ssh-tunnel-swarm) works in any agent that reads `.agents/skills/`,
+and installs natively in the clients below.
+
+### Claude Code
+
+```bash
+claude plugin marketplace add psyb0t/agents
+claude plugin install ssh-tunnel-swarm@psyb0t
+```
+
+### Codex
+
+```bash
+codex plugin marketplace add psyb0t/agents
+```
+
+Codex also picks the skill up automatically in any repo containing `.agents/skills/`, and
+invokes it as `$ssh-tunnel-swarm`.
+
+### OpenClaw
+
+The skill is published to ClawHub on every release:
+
+```bash
+openclaw skills install @psyb0t/ssh-tunnel-swarm
 ```
 
 ## Important Notes

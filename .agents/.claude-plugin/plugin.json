@@ -1,0 +1,8 @@
+{
+  "name": "ssh-tunnel-swarm",
+  "description": "Bash tool that spins up and supervises many concurrent SSH forward and reverse tunnels from a plain-text rules file, with auto-reconnect.",
+  "author": { "name": "psyb0t", "url": "https://github.com/psyb0t" },
+  "homepage": "https://github.com/psyb0t/ssh-tunnel-swarm",
+  "license": "WTFPL",
+  "keywords": ["ssh", "tunnel", "port-forwarding", "reverse-tunnel", "forward-tunnel", "bash", "swarm"]
+}
