@@ -1,5 +1,8 @@
 # ssh-tunnel-swarm
 
+[![version](https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/badges/version.svg)](https://github.com/psyb0t/ssh-tunnel-swarm/releases)
+[![license](https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/badges/license.svg)](LICENSE)
+
 ![ssh-tunnel-swarm](./assets/ssh-tunnel-swarm.png)
 
 ssh-tunnel-swarm is a powerful shell script tool for managing multiple SSH tunnels concurrently. It simplifies the process of creating and managing both forward and reverse SSH tunnels by applying a predefined set of rules for each tunnel.
