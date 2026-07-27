@@ -204,10 +204,12 @@ claude plugin install ssh-tunnel-swarm@psyb0t
 
 ```bash
 codex plugin marketplace add psyb0t/agents
+codex plugin add ssh-tunnel-swarm@psyb0t
 ```
 
-Codex also picks the skill up automatically in any repo containing `.agents/skills/`, and
-invokes it as `$ssh-tunnel-swarm`.
+Installed via the marketplace, the skill invokes as `$ssh-tunnel-swarm:ssh-tunnel-swarm`.
+Codex also picks the skill up automatically in any repo containing `.agents/skills/`, with
+no install required, where it invokes as plain `$ssh-tunnel-swarm`.
 
 ### OpenClaw
 

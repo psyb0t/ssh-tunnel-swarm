@@ -1,6 +1,6 @@
 {
   "name": "ssh-tunnel-swarm",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Bash tool that spins up and supervises many concurrent SSH forward and reverse tunnels from a plain-text rules file, with auto-reconnect.",
   "author": { "name": "psyb0t", "url": "https://github.com/psyb0t" },
   "homepage": "https://github.com/psyb0t/ssh-tunnel-swarm",

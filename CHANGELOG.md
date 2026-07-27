@@ -2,6 +2,15 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v1.4.5 — 2026-07-27
+
+- Fixed the README's Codex subsection, which was missing the actual plugin install
+  command after the marketplace-add step: `codex plugin add ssh-tunnel-swarm@psyb0t`.
+- Clarified that the skill's invocation form differs depending on how Codex picked it
+  up: installed via the marketplace it's `$ssh-tunnel-swarm:ssh-tunnel-swarm`, while
+  auto-detected from a repo's own `.agents/skills/` (no install needed) it's plain
+  `$ssh-tunnel-swarm`.
+
 ## v1.4.4 — 2026-07-27
 
 - Added Claude Code and Codex plugin manifests (`.agents/.claude-plugin/plugin.json`,
