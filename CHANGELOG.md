@@ -2,6 +2,21 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v1.4.6 — 2026-08-01
+
+CI/infrastructure only. No code in this repo changed — the whole diff since v1.4.5 is
+under `.github/workflows/`.
+
+- Split the pipeline: building and publishing stay in `pipeline.yml`, and everything
+  that leaves the host now lives in its own file beside it.
+- The repo is mirrored to Codeberg as well as GitLab.
+- The repo is archived to the Wayback Machine, Software Heritage and archive.org.
+- Issues opened on either mirror are copied back to GitHub every six hours, and closed
+  here when the original closes.
+- Pull requests are switched off on both mirrors — they are force-pushed from GitHub, so
+  anything merged there would be destroyed by the next sync. Issues and forking stay
+  enabled.
+
 ## v1.4.5 — 2026-07-27
 
 - Fixed the README's Codex subsection, which was missing the actual plugin install
