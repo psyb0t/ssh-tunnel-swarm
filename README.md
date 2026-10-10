@@ -190,7 +190,7 @@ ssh-tunnel-swarm
 
 ## Agent integrations
 
-The [skill](.agents/skills/ssh-tunnel-swarm) works in any agent that reads `.agents/skills/`,
+The [skill](.agents/skills/ssh-tunnel-swarm) works in any agent that reads `.agents/skills/` (such as [peen](https://github.com/psyb0t/peen)),
 and installs natively in the clients below.
 
 ### Claude Code
