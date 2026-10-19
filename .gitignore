@@ -1,5 +1,6 @@
 build
 rules.txt
 git-update.sh
+git-update.sh.debot
 CLAUDE.md
 .telemetry/
