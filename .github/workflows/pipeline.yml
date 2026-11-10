@@ -1,77 +1,79 @@
 name: pipeline
+
+# Every branch push builds the merged script, runs shellcheck and the unit
+# tests, and refreshes the badges on master. A v* tag does not rerun the
+# checks: it waits for that commit's master run to succeed, cuts the GitHub
+# release from the annotated tag message, uploads the merged
+# ssh-tunnel-swarm script that tools/downloader.sh installs, and publishes the
+# skill to ClawHub.
 on: [push]
+
+permissions: {}
+
 jobs:
-  badges:
-    if: github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/')
+  # make lint and make test run their tools in pinned containers, so the
+  # runner needs only Docker, Make and Bash.
+  code:
+    if: "!startsWith(github.ref, 'refs/tags/')"
+    permissions:
+      contents: read
+      security-events: write
+    uses: psyb0t/reusable-github-workflows/.github/workflows/code-workflow.yml@master
+    with:
+      build_command: "make build"
+      lint_command: "make lint"
+      test_command: "make test"
+
+  wait:
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      actions: read
+    uses: psyb0t/reusable-github-workflows/.github/workflows/wait-for-default-branch.yml@master
+
+  release:
+    needs: [wait]
+    if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
-    uses: psyb0t/reusable-github-workflows/.github/workflows/create-badges.yml@master
+    uses: psyb0t/reusable-github-workflows/.github/workflows/release-workflow.yml@master
 
-  lint:
+  # release-workflow.yml attaches nothing, and the installer downloads the
+  # asset named ssh-tunnel-swarm from the release, so build it from the tag
+  # and upload it here.
+  release-asset:
+    needs: [release]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Run shellcheck
-        uses: ludeeus/action-shellcheck@master
-
-  test:
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Test
-        run: make test
-
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Build
         run: make build
 
-      - name: Cache the build artifacts
-        if: contains(github.ref, 'refs/tags/')
-        uses: actions/cache@v3
-        with:
-          path: build
-          key: build-${{ hashFiles('**/*', '!build', '!.git') }}
-          restore-keys: |
-            build-
-
-  release:
-    if: contains(github.ref, 'refs/tags/')
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Restore build artifacts
-        uses: actions/cache@v3
-        with:
-          path: build
-          key: build-${{ hashFiles('**/*', '!build', '!.git') }}
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: false
-          files: |
-            build/ssh-tunnel-swarm
+      - name: Upload the merged script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release upload "$TAG" build/ssh-tunnel-swarm --clobber
 
-  # Publish the skill (.agents/skills/) to ClawHub on tag pushes, after tests pass.
+  badges:
+    needs: [code, wait]
+    if: "always() && ((github.ref_name == github.event.repository.default_branch && needs.code.result == 'success') || (startsWith(github.ref, 'refs/tags/') && needs.wait.result == 'success'))"
+    permissions:
+      contents: write
+    uses: psyb0t/reusable-github-workflows/.github/workflows/create-badges.yml@master
+
   publish-to-clawhub:
-    needs: test
+    needs: [release-asset]
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: read
     uses: psyb0t/reusable-github-workflows/.github/workflows/clawhub-publish.yml@master
+    with:
+      skill_names: '["ssh-tunnel-swarm"]'
+      plugin_names: "[]"
     secrets:
       clawhub_token: ${{ secrets.CLAWHUB_TOKEN }}

@@ -1,0 +1,51 @@
+title: ssh-tunnel-swarm
+tagline: Many SSH tunnels from one rules file
+description: Bash tool that opens many forward and reverse SSH tunnels from one plain-text rules file and restarts each connection when it drops.
+lang: en
+url: https://psyb0t.github.io
+baseurl: /ssh-tunnel-swarm
+repository: psyb0t/ssh-tunnel-swarm
+author: Ciprian Mandache
+
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+color_scheme: mocha
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-relative-links
+  - jekyll-include-cache
+
+permalink: pretty
+
+relative_links:
+  enabled: true
+  collections: false
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      seo:
+        type: TechArticle
+
+search:
+  heading_level: 3
+
+aux_links:
+  GitHub:
+    - https://github.com/psyb0t/ssh-tunnel-swarm
+aux_links_new_tab: true
+
+nav_external_links:
+  - title: Changelog
+    url: https://github.com/psyb0t/ssh-tunnel-swarm/blob/master/CHANGELOG.md
+
+gh_edit_link: true
+gh_edit_link_text: Edit this page on GitHub
+gh_edit_repository: https://github.com/psyb0t/ssh-tunnel-swarm
+gh_edit_branch: master
+gh_edit_source: docs
+gh_edit_view_mode: tree

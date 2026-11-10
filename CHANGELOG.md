@@ -2,6 +2,12 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v1.4.8, 2026-11-10
+
+- The documentation is published at https://psyb0t.github.io/ssh-tunnel-swarm/, and the reference material moved there from the README. The agent skill now describes the rules file, the fixed 5 second retry after a failed exit, and shutdown the way the script behaves.
+- Every branch push builds the merged script and runs shellcheck and the unit tests, and `make lint` and `make test` run them locally in pinned containers. A version tag waits for that commit's master run to pass, then cuts the release and uploads the `ssh-tunnel-swarm` script the installer downloads.
+- Buy Me a Coffee is in the funding links, and `AGENTS.md` plus project rules in `.agents/rules/` are committed for coding agents.
+
 ## v1.4.7, 2026-10-10
 
 Documentation only. The README's agent integrations section names [peen](https://github.com/psyb0t/peen) as an example of an agent that reads `.agents/skills/`.
