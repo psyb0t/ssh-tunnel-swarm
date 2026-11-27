@@ -75,6 +75,5 @@ jobs:
     with:
       skill_names: '["ssh-tunnel-swarm"]'
       plugin_names: "[]"
-      pin_source_urls: true
     secrets:
       clawhub_token: ${{ secrets.CLAWHUB_TOKEN }}

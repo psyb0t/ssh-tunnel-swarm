@@ -2,6 +2,12 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v1.4.10, 2026-11-27
+
+- The agent skill now covers only using an `ssh-tunnel-swarm` that is already installed: writing the rules file, setting the environment variables and running the tool. Installer steps are out of the skill and stay in the [documentation](https://psyb0t.github.io/ssh-tunnel-swarm/). `references/setup.md` is removed, and the new `references/reference.md` holds the environment variables, log levels and exact rules file syntax.
+- The ClawHub publish job no longer sets `pin_source_urls`, so publishing no longer rewrites the skill's links to the release tag.
+- The agent-surface rule now says the skill covers use of the installed tool, links the docs for setup and does not document the installer. The rules file format rule names both skill files.
+
 ## v1.4.9, 2026-11-27
 
 - The agent skill no longer tells an agent to pipe the installer into `bash`. It downloads `downloader.sh` to a file, has you read it, then runs it. It no longer appends to `~/.bashrc` or `~/.zshrc` for you, and the `/usr/local/bin` install is an optional step. The shell, network and file access the skill declares now covers the install steps, and its example key paths are placeholders.

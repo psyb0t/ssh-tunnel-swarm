@@ -1,64 +1,6 @@
-# ssh-tunnel-swarm: setup & config reference
+# ssh-tunnel-swarm: configuration reference
 
-## Prerequisites
-
-- **bash** 4 or newer: the tool is a bash script and uses associative arrays.
-- **ssh**: used to establish every connection and tunnel; must be installed and usable from the shell (keys set up, agent or plain key files).
-- Install-only extras (not needed to run, only to fetch the released script):
-  - **jq**: `tools/downloader.sh` uses it to parse the GitHub releases API.
-  - **wget**: used both to fetch the downloader and, by the downloader, to fetch the release asset.
-
-No password-auth support, key-based SSH only.
-
-## Install
-
-### Option A: downloader script (fetches latest GitHub release)
-
-Download the installer to a file, read it, then run it:
-
-```shell
-wget -q https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools/downloader.sh -O downloader.sh
-less downloader.sh
-bash downloader.sh
-```
-
-The installer asks the GitHub releases API for the release list and downloads the `ssh-tunnel-swarm` asset of the first release in it. It does not verify a checksum or signature, so read the downloaded script before you run it, or use Option B to build it yourself.
-
-This drops an executable `ssh-tunnel-swarm` **bash script** in the current directory. `make build` concatenates the source scripts into one self-contained file and `chmod +x`'s it (a merged single-file build, NOT a compiled binary). The downloader checks for `jq`/`wget` first and exits with an error message if either is missing.
-
-You can run the script from where it is, or move it onto `PATH` for the current user:
-
-```shell
-mkdir -p ~/bin
-mv ssh-tunnel-swarm ~/bin/
-```
-
-If `~/bin` is not on `PATH`, add `export PATH="$HOME/bin:$PATH"` to your shell startup file (`~/.bashrc` for bash, `~/.zshrc` for zsh) yourself and open a new shell. You can also run `~/bin/ssh-tunnel-swarm` by its full path.
-
-Optional system-wide install, only when every user on the machine should have it (needs root):
-
-```shell
-sudo mv ssh-tunnel-swarm /usr/local/bin/
-```
-
-### Option B: build from source
-
-Clone the repo (default branch `master`) and build the merged single-file script via the Makefile:
-
-```shell
-git clone https://github.com/psyb0t/ssh-tunnel-swarm.git
-cd ssh-tunnel-swarm
-make build
-```
-
-`make build` concatenates `logger.sh`, `validators.sh`, `rules.sh`, `splitters.sh`, `main.sh` (stripping `source` lines, comments, and blank lines) into `build/ssh-tunnel-swarm`, `chmod +x`'d and ready to run/copy onto `PATH`.
-
-Other Makefile targets:
-
-- `make run`: runs `main.sh` directly from the source tree (no build step; must run from the repo root because the sources `source` each other by relative path; reads `rules.txt`/env vars from cwd).
-- `make test`: runs `./test.sh` inside a pinned `bash` container as your user; it sources every `*_test.sh` file and runs the assertions (logging force-disabled during tests).
-- `make lint`: shellcheck over every tracked `*.sh`, in a container.
-- `make clean`: removes `build/`.
+Requires bash 4 or newer and `ssh` (keys set up, agent or plain key files).
 
 ## Env vars (the entire CLI surface, there are no flags)
 
@@ -143,19 +85,10 @@ Two blocks = two independent SSH connections started concurrently, each in its o
 
 ### What happens per connection at runtime
 
-For each block, `ssh-tunnel-swarm` runs, in a loop:
-
-```
-ssh -N -i <key> \
-    -o ExitOnForwardFailure=yes \
-    -o ServerAliveInterval=30 \
-    -o ServerAliveCountMax=3 \
-    -o StrictHostKeyChecking=yes \
-    <all -L/-R flags for this block> \
-    -p <port> <user>@<host>
-```
+For each block, `ssh-tunnel-swarm` runs one `ssh -N` in a loop, with the block's key, port and every `-L`/`-R` flag for the block, and these options:
 
 - `-N`: no remote command, tunnel-only session.
+- `-i <key>`: the private key named in the header line.
 - `ExitOnForwardFailure=yes`: if any single forward/reverse bind fails, the whole `ssh` process exits (so the retry loop can catch it and retry the full set).
 - `ServerAliveInterval=30` / `ServerAliveCountMax=3`: dead-connection detection (~90s to notice a hung link and exit).
 - `StrictHostKeyChecking=yes`: the target's host key MUST already be in `known_hosts`, or the connection is refused. Populate `known_hosts` yourself (`ssh-keyscan` or a first manual connect on a trusted network) before running the swarm. If a host's key changes, you must manually clean the stale entry from `known_hosts`.

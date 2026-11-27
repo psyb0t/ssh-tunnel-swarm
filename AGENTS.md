@@ -47,7 +47,7 @@ Flow: `RULES_FILE` -> `load_rules` (validate, fill `RULES`) -> one subshell per 
 | `docs/` | The documentation pages |
 | `website/` | The Docusaurus site that builds `docs/` |
 | `assets/` | The README image |
-| `.agents/skills/ssh-tunnel-swarm/` | The agent skill and its `references/setup.md` |
+| `.agents/skills/ssh-tunnel-swarm/` | The agent skill and its `references/reference.md` |
 | `.agents/.claude-plugin/`, `.agents/.codex-plugin/` | Claude Code and Codex plugin manifests |
 | `.agents/rules/` | Rules for changing this repository |
 | `.github/workflows/` | `pipeline.yml` plus the mirror, archive and issue-pull workflows |

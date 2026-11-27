@@ -1,12 +1,12 @@
 ---
 name: ssh-tunnel-swarm
-description: "Bash tool that holds open many concurrent SSH forward (-L) and reverse (-R) tunnels from a plain-text rules file. One connection block per host: a header line `user@host:port=/path/to/private/key` plus one or more `forward|reverse local-interface:local-port:remote-interface:remote-port` lines. Each host runs in its own background `ssh -N` loop with StrictHostKeyChecking=yes and retries every 5s after a failure; Ctrl-C stops every tunnel. Configured by env vars (RULES_FILE, LOG_ENABLED, LOG_FILE, LOG_LEVEL), key auth only. Also covers installing the script: downloading the installer or a release asset from GitHub, or building from source. Use when the user wants to set up or manage multiple SSH forward or reverse tunnels from one rules file."
+description: "Run many concurrent SSH forward (-L) and reverse (-R) tunnels from a plain-text rules file with the ssh-tunnel-swarm script. One connection block per host: a header line `user@host:port=/path/to/private/key` plus one or more `forward|reverse local-interface:local-port:remote-interface:remote-port` lines. Each host runs in its own background `ssh -N` loop with StrictHostKeyChecking=yes and retries every 5s after a failure; Ctrl-C stops every tunnel. Configured by env vars (RULES_FILE, LOG_ENABLED, LOG_FILE, LOG_LEVEL). Use when the user wants to write a rules file or run and manage multiple SSH forward or reverse tunnels from one rules file."
 homepage: https://github.com/psyb0t/ssh-tunnel-swarm
 user-invocable: true
 permissions:
-  shell: runs the ssh-tunnel-swarm bash script, which spawns and supervises long-running `ssh` child processes; install steps run the downloaded installer script or `make build`
-  network: opens outbound SSH connections and forward/reverse port tunnels to every host listed in the rules file; the optional install step downloads the installer script and the release script from GitHub
-  filesystem: reads the rules file (RULES_FILE) and the SSH private key path named in each connection block; appends to LOG_FILE when set; install steps write the script into the current directory and optionally into ~/bin or /usr/local/bin
+  shell: runs the ssh-tunnel-swarm bash script, which spawns and supervises long-running `ssh` child processes
+  network: opens outbound SSH connections and forward/reverse port tunnels to every host listed in the rules file
+  filesystem: reads the rules file (RULES_FILE) and the SSH private key path named in each connection block; appends to LOG_FILE when set
 metadata:
   openclaw:
     emoji: 🚇
@@ -18,14 +18,18 @@ metadata:
 
 Bash tool for running a swarm of SSH tunnels, forward and reverse, many hosts at once, off one rules file. No daemon, no config DSL beyond plain text, just `ssh -L`/`ssh -R` looped per host with automatic retry.
 
+## Setup
+
+The `ssh-tunnel-swarm` script must already be installed and on `PATH` (it needs bash 4 or newer and `ssh`). Installation is covered in the docs at https://psyb0t.github.io/ssh-tunnel-swarm/. The values you work with are `RULES_FILE` (path to the rules file, default `rules.txt` in the current directory) and the optional `LOG_ENABLED`, `LOG_FILE` and `LOG_LEVEL`, all read from the environment.
+
 ## Security & safety
 
 - This opens real SSH connections using **your keys** to **hosts you list in the rules file**. Anything wrong in that file connects somewhere real.
 - **Reverse tunnels (`reverse`) expose a LOCAL service to the REMOTE host.** Only point `reverse` rules at hosts you trust: a compromised or malicious remote can now reach whatever you bound on your side.
 - **Forward tunnels (`forward`) expose a REMOTE service through YOUR local machine.** Same trust logic in reverse: don't forward into networks you don't control.
 - All connections force `StrictHostKeyChecking=yes`: the target host must already be in `known_hosts` or the connection fails. That's intentional; don't work around it by disabling host key checking.
-- No password auth support, private key only. Keep the key file permissions tight (`chmod 600`) and keep the keys and the rules file (which names key paths) out of shared locations and git repositories.
-- The tool sends traffic only to the SSH hosts in the rules file. The optional install step downloads the installer script and the release script from GitHub over HTTPS; read the installer before you run it (see `references/setup.md`).
+- Each connection block names the private key to use, and the tool has no password handling. Keep the key file permissions tight (`chmod 600`) and keep the keys and the rules file (which names key paths) out of shared locations and git repositories.
+- The tool sends traffic only to the SSH hosts in the rules file.
 - Every connection block retries forever (fixed 5s delay) until you stop the script. Make sure that's actually what you want before pointing this at a host.
 
 ## When to use
@@ -37,7 +41,7 @@ Bash tool for running a swarm of SSH tunnels, forward and reverse, many hosts at
 ## When NOT to use
 
 - One-off, single tunnel for a few minutes: just run `ssh -L`/`ssh -R` directly.
-- Password-based SSH auth: this tool only supports private key auth.
+- Password-based SSH auth: the tool is built around one private key per host.
 - You need a full VPN / mesh network (e.g. overlay networking, NAT traversal across many peers). This is tunnels over plain SSH, not a VPN.
 
 ## Config grammar (rules file)
@@ -96,4 +100,4 @@ ssh-tunnel-swarm
 
 `Ctrl-C` in the terminal stops every tunnel and exits. `kill <pid>` (SIGTERM) on the main process alone kills the per-host subshells but leaves their `ssh` processes running; signal the whole process group instead (`kill -TERM -- -<pgid>`), or run it under systemd, whose default `KillMode=control-group` stops everything.
 
-Install/build details, the full env var reference, and log-level semantics are in `references/setup.md`.
+The full env var reference, log-level semantics, the exact rules file syntax and the runtime behavior are in [references/reference.md](references/reference.md).
