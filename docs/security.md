@@ -1,7 +1,6 @@
 ---
 title: "Security"
 description: "What ssh-tunnel-swarm connects to and exposes: strict host key checking, key-only authentication, forward and reverse exposure, and log contents."
-nav_order: 6
 ---
 
 # Security

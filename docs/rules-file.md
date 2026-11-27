@@ -1,7 +1,6 @@
 ---
 title: "Rules file"
 description: "The ssh-tunnel-swarm rules file: header and tunnel line syntax, how forward and reverse map to ssh -L and -R, validation, and examples."
-nav_order: 3
 ---
 
 # Rules file

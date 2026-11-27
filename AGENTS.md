@@ -27,7 +27,7 @@ Flow: `RULES_FILE` -> `load_rules` (validate, fill `RULES`) -> one subshell per 
 - Bash only, with associative arrays (`declare -A`), so Bash 4 or newer. Runtime needs `ssh`, `mktemp`, `date` and `pgrep`.
 - Tests are plain Bash: `common_test.sh` holds `assert_equals`, `assert_is_error` and `assert_no_error`.
 - Lint is shellcheck in the pinned `koalaman/shellcheck` image; tests run in the pinned `bash` image. Both are set at the top of the `Makefile`.
-- Docs: GitHub Pages builds `docs/` from `master` with Jekyll and the Just the Docs remote theme.
+- Docs: a Docusaurus site in `website/` builds `docs/`, and the `docs.yml` workflow publishes it to GitHub Pages from `master`.
 - CI: `.github/workflows/pipeline.yml` calling `psyb0t/reusable-github-workflows`.
 
 ## Layout
@@ -42,9 +42,10 @@ Flow: `RULES_FILE` -> `load_rules` (validate, fill `RULES`) -> one subshell per 
 | `*_test.sh`, `common_test.sh`, `test.sh` | Unit tests, assertion helpers, and the runner that sources every `*_test.sh` |
 | `rules.txt.example` | A sample rules file |
 | `tools/downloader.sh` | The `wget ... \| bash` installer |
-| `Makefile` | `build`, `lint`, `test`, `docs`, `run`, `clean` |
+| `Makefile` | `build`, `lint`, `test`, `docs`, `docs-lock`, `run`, `clean` |
 | `build/` | `make build` output (gitignored) |
-| `docs/` | The documentation site |
+| `docs/` | The documentation pages |
+| `website/` | The Docusaurus site that builds `docs/` |
 | `assets/` | The README image |
 | `.agents/skills/ssh-tunnel-swarm/` | The agent skill and its `references/setup.md` |
 | `.agents/.claude-plugin/`, `.agents/.codex-plugin/` | Claude Code and Codex plugin manifests |
@@ -60,7 +61,8 @@ make help     # every target
 make build    # merge the sources into build/ssh-tunnel-swarm
 make lint     # shellcheck over every tracked *.sh
 make test     # ./test.sh inside the bash image, as your uid
-make docs     # build the site locally with the GitHub Pages image
+make docs     # build the site and check its links in a Node container
+make docs-lock # refresh website/pnpm-lock.yaml
 make run      # bash main.sh from the repository root
 make clean    # remove build/
 ```

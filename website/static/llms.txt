@@ -1,0 +1,13 @@
+# ssh-tunnel-swarm
+
+> Bash tool that opens many forward and reverse SSH tunnels from one plain-text rules file and restarts each connection when it drops.
+
+- [ssh-tunnel-swarm](https://psyb0t.github.io/ssh-tunnel-swarm/): ssh-tunnel-swarm opens many forward and reverse SSH tunnels from one rules file, one ssh process per host, and restarts each one when it fails.
+- [Installation](https://psyb0t.github.io/ssh-tunnel-swarm/installation/): Install ssh-tunnel-swarm with the downloader script or from source, put it on your PATH, upgrade it and remove it again.
+- [Rules file](https://psyb0t.github.io/ssh-tunnel-swarm/rules-file/): The ssh-tunnel-swarm rules file: header and tunnel line syntax, how forward and reverse map to ssh -L and -R, validation, and examples.
+- [Configuration](https://psyb0t.github.io/ssh-tunnel-swarm/configuration/): The four ssh-tunnel-swarm environment variables (RULES_FILE, LOG_ENABLED, LOG_FILE, LOG_LEVEL), the log levels and the log line format.
+- [Running the swarm](https://psyb0t.github.io/ssh-tunnel-swarm/running/): What ssh-tunnel-swarm runs for each host, how its retry loop behaves, how to stop it cleanly, and how to keep it running under systemd.
+- [Security](https://psyb0t.github.io/ssh-tunnel-swarm/security/): What ssh-tunnel-swarm connects to and exposes: strict host key checking, key-only authentication, forward and reverse exposure, and log contents.
+- [Troubleshooting](https://psyb0t.github.io/ssh-tunnel-swarm/troubleshooting/): ssh-tunnel-swarm error messages and fixes: rules file checks, invalid lines, missing keys, host key failures, refused tunnels and processes left behind.
+- [Agent integrations](https://psyb0t.github.io/ssh-tunnel-swarm/integrations/): Install the ssh-tunnel-swarm agent skill in Claude Code, Codex or OpenClaw so a coding agent can write rules files and run the tool.
+- [Development](https://psyb0t.github.io/ssh-tunnel-swarm/development/): Work on ssh-tunnel-swarm: source layout, Make targets, the tests, how make build merges the sources, CI and the release process.

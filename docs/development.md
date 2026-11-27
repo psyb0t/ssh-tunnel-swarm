@@ -1,7 +1,6 @@
 ---
 title: "Development"
 description: "Work on ssh-tunnel-swarm: source layout, Make targets, the tests, how make build merges the sources, CI and the release process."
-nav_order: 9
 ---
 
 # Development
@@ -20,7 +19,8 @@ Docker, Make and Bash are all you need. Lint and tests run in pinned containers,
 | [`test.sh`](https://github.com/psyb0t/ssh-tunnel-swarm/blob/master/test.sh), [`common_test.sh`](https://github.com/psyb0t/ssh-tunnel-swarm/blob/master/common_test.sh), `*_test.sh` | Test runner, assertion helpers and the unit tests |
 | [`tools/downloader.sh`](https://github.com/psyb0t/ssh-tunnel-swarm/blob/master/tools/downloader.sh) | The installer that fetches the release asset |
 | [`Makefile`](https://github.com/psyb0t/ssh-tunnel-swarm/blob/master/Makefile) | Build, lint, test and docs targets |
-| `docs/` | This site |
+| `docs/` | The pages of this site |
+| `website/` | The Docusaurus project that builds `docs/` into the site, with its pinned `pnpm-lock.yaml` |
 
 ## Make targets
 
@@ -29,7 +29,8 @@ make help     # list the targets
 make build    # merge the sources into build/ssh-tunnel-swarm
 make lint     # shellcheck over every tracked *.sh, in a container
 make test     # ./test.sh in the bash image, as your user
-make docs     # build this site locally with the GitHub Pages image
+make docs     # build this site and check its links, in a Node container
+make docs-lock # refresh website/pnpm-lock.yaml after a change to website/package.json
 make run      # bash main.sh from the repository root
 make clean    # remove build/
 ```
@@ -52,5 +53,7 @@ The release asset is a single file. `make build` concatenates `logger.sh`, `vali
 - On a `v*` tag, the checks do not run again. The `wait` job waits for the tagged commit's `master` run to pass, `release` creates the GitHub release from the annotated tag message, `release-asset` builds the script from the tag and uploads it as the `ssh-tunnel-swarm` asset that the downloader fetches, and `publish-to-clawhub` publishes the [agent skill](integrations.md).
 
 To release: update `CHANGELOG.md` and the version in `.agents/.codex-plugin/plugin.json`, push to `master`, wait for the pipeline to pass, then push an annotated `vX.Y.Z` tag on that commit.
+
+[`.github/workflows/docs.yml`](https://github.com/psyb0t/ssh-tunnel-swarm/blob/master/.github/workflows/docs.yml) builds this site on every pull request and every push to `master`, and publishes it to GitHub Pages from `master`. GitHub Pages must use GitHub Actions as its publishing source. The build runs in a pinned Node container with dependency install scripts disabled and a seven-day age limit on new package versions, and it fails on a broken link or anchor. Visitor tracking loads the shared `https://psyb0t.github.io/analytics.js` script.
 
 Other workflows mirror the repository to GitLab and Codeberg, archive it, and copy issues opened on the mirrors back to GitHub.

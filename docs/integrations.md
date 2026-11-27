@@ -1,7 +1,6 @@
 ---
 title: "Agent integrations"
 description: "Install the ssh-tunnel-swarm agent skill in Claude Code, Codex or OpenClaw so a coding agent can write rules files and run the tool."
-nav_order: 8
 ---
 
 # Agent integrations

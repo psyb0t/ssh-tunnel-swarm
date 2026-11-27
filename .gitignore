@@ -5,3 +5,6 @@ git-update.sh.debot
 .telemetry/
 *.local.json
 .testing/
+/website/node_modules/
+/website/.docusaurus/
+/website/build/

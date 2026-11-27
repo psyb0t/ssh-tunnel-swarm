@@ -14,35 +14,32 @@ No password-auth support, key-based SSH only.
 
 ### Option A: downloader script (fetches latest GitHub release)
 
-```shell
-wget -qO- https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools/downloader.sh | bash
-```
-
-This drops an executable `ssh-tunnel-swarm` **bash script** in the current directory. `make build` concatenates the source scripts into one self-contained file and `chmod +x`'s it (a merged single-file build, NOT a compiled binary). The downloader checks for `jq`/`wget` first and exits with an error message if either is missing, then takes the first release the GitHub API lists.
-
-Then install it somewhere on `PATH`:
-
-**All users:**
+Download the installer to a file, read it, then run it:
 
 ```shell
-sudo mv ssh-tunnel-swarm /usr/local/bin/
+wget -q https://raw.githubusercontent.com/psyb0t/ssh-tunnel-swarm/master/tools/downloader.sh -O downloader.sh
+less downloader.sh
+bash downloader.sh
 ```
 
-**Current user only:**
+The installer asks the GitHub releases API for the release list and downloads the `ssh-tunnel-swarm` asset of the first release in it. It does not verify a checksum or signature, so read the downloaded script before you run it, or use Option B to build it yourself.
+
+This drops an executable `ssh-tunnel-swarm` **bash script** in the current directory. `make build` concatenates the source scripts into one self-contained file and `chmod +x`'s it (a merged single-file build, NOT a compiled binary). The downloader checks for `jq`/`wget` first and exits with an error message if either is missing.
+
+You can run the script from where it is, or move it onto `PATH` for the current user:
 
 ```shell
 mkdir -p ~/bin
 mv ssh-tunnel-swarm ~/bin/
 ```
 
-If `~/bin` isn't already on `PATH`, add it (use `~/.zshrc` for zsh):
+If `~/bin` is not on `PATH`, add `export PATH="$HOME/bin:$PATH"` to your shell startup file (`~/.bashrc` for bash, `~/.zshrc` for zsh) yourself and open a new shell. You can also run `~/bin/ssh-tunnel-swarm` by its full path.
+
+Optional system-wide install, only when every user on the machine should have it (needs root):
 
 ```shell
-echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
+sudo mv ssh-tunnel-swarm /usr/local/bin/
 ```
-
-Check first: `echo "$PATH" | grep -q "$HOME/bin" && echo already-on-path || echo not-on-path`
 
 ### Option B: build from source
 

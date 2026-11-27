@@ -1,23 +1,12 @@
 ---
 name: ssh-tunnel-swarm
-description: >
-  Bash tool that spins up and holds open MANY concurrent SSH tunnels, both forward (-L)
-  and reverse (-R), driven by a plain-text rules file. One connection block per host:
-  a header line `user@host:port=/path/to/private/key` followed by one or more tunnel
-  lines `forward|reverse local-iface:local-port:remote-iface:remote-port`. Each host
-  connection runs in its own background loop
-  (`ssh -N -i <key> -o ExitOnForwardFailure=yes -o ServerAliveInterval=30
-  -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes`) and retries every 5s after
-  a failed exit; Ctrl-C stops every tunnel. Configured entirely via env vars
-  (RULES_FILE, LOG_ENABLED, LOG_FILE, LOG_LEVEL), no CLI flags. No password auth,
-  key-based only. Use when the user wants to set up/manage multiple SSH forward or
-  reverse tunnels from a single rules file across one or many hosts.
+description: "Bash tool that holds open many concurrent SSH forward (-L) and reverse (-R) tunnels from a plain-text rules file. One connection block per host: a header line `user@host:port=/path/to/private/key` plus one or more `forward|reverse local-interface:local-port:remote-interface:remote-port` lines. Each host runs in its own background `ssh -N` loop with StrictHostKeyChecking=yes and retries every 5s after a failure; Ctrl-C stops every tunnel. Configured by env vars (RULES_FILE, LOG_ENABLED, LOG_FILE, LOG_LEVEL), key auth only. Also covers installing the script: downloading the installer or a release asset from GitHub, or building from source. Use when the user wants to set up or manage multiple SSH forward or reverse tunnels from one rules file."
 homepage: https://github.com/psyb0t/ssh-tunnel-swarm
 user-invocable: true
 permissions:
-  shell: bash script (main.sh) that spawns and supervises long-running `ssh` child processes
-  network: opens outbound SSH connections and forward/reverse port tunnels to every host listed in the rules file
-  filesystem: reads the rules/config file (RULES_FILE) and the SSH private key path referenced by each connection block
+  shell: runs the ssh-tunnel-swarm bash script, which spawns and supervises long-running `ssh` child processes; install steps run the downloaded installer script or `make build`
+  network: opens outbound SSH connections and forward/reverse port tunnels to every host listed in the rules file; the optional install step downloads the installer script and the release script from GitHub
+  filesystem: reads the rules file (RULES_FILE) and the SSH private key path named in each connection block; appends to LOG_FILE when set; install steps write the script into the current directory and optionally into ~/bin or /usr/local/bin
 metadata:
   openclaw:
     emoji: 🚇
@@ -35,7 +24,8 @@ Bash tool for running a swarm of SSH tunnels, forward and reverse, many hosts at
 - **Reverse tunnels (`reverse`) expose a LOCAL service to the REMOTE host.** Only point `reverse` rules at hosts you trust: a compromised or malicious remote can now reach whatever you bound on your side.
 - **Forward tunnels (`forward`) expose a REMOTE service through YOUR local machine.** Same trust logic in reverse: don't forward into networks you don't control.
 - All connections force `StrictHostKeyChecking=yes`: the target host must already be in `known_hosts` or the connection fails. That's intentional; don't work around it by disabling host key checking.
-- No password auth support, private key only. Keep the key file permissions tight (`chmod 600`) and never put keys or the rules file (which references key paths) in a world-readable location or a git repo.
+- No password auth support, private key only. Keep the key file permissions tight (`chmod 600`) and keep the keys and the rules file (which names key paths) out of shared locations and git repositories.
+- The tool sends traffic only to the SSH hosts in the rules file. The optional install step downloads the installer script and the release script from GitHub over HTTPS; read the installer before you run it (see `references/setup.md`).
 - Every connection block retries forever (fixed 5s delay) until you stop the script. Make sure that's actually what you want before pointing this at a host.
 
 ## When to use
@@ -81,11 +71,11 @@ Plain text file, default path `rules.txt` (relative to the current directory), o
 Host 1 exposes a local web app on the VPS (reverse) and reaches the VPS's internal Postgres from your machine (forward). Host 2 reaches an internal-only admin panel through a jump host (forward) and exposes your local dev API back to that jump host (reverse).
 
 ```
-deploy@vps1.example.com:22=/home/user/.ssh/deploy_vps1
+deploy@vps1.example.com:22=/path/to/keys/deploy_vps1
 reverse localhost:3000:0.0.0.0:8080
 forward localhost:15432:127.0.0.1:5432
 
-opsuser@jump.example.com:22=/home/user/.ssh/deploy_jump
+opsuser@jump.example.com:22=/path/to/keys/deploy_jump
 forward localhost:9090:10.0.5.20:9090
 reverse localhost:4000:127.0.0.1:4000
 ```

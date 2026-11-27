@@ -2,6 +2,13 @@
 
 All notable changes per release. Versions follow [semver](https://semver.org).
 
+## v1.4.9, 2026-11-27
+
+- The agent skill no longer tells an agent to pipe the installer into `bash`. It downloads `downloader.sh` to a file, has you read it, then runs it. It no longer appends to `~/.bashrc` or `~/.zshrc` for you, and the `/usr/local/bin` install is an optional step. The shell, network and file access the skill declares now covers the install steps, and its example key paths are placeholders.
+- When the skill is published to ClawHub, its links to files on `master` are rewritten to the release tag, so the published skill points at the installer of that release.
+- The documentation site moved from Jekyll to Docusaurus at the same URLs. A new `docs.yml` workflow builds it on every pull request and publishes it from `master`, `make docs` fails on a broken internal link or anchor, and `make docs-lock` refreshes the pinned dependency lockfile.
+- The project rules in `.agents/rules/` keep only what is specific to this repository.
+
 ## v1.4.8, 2026-11-10
 
 - The documentation is published at https://psyb0t.github.io/ssh-tunnel-swarm/, and the reference material moved there from the README. The agent skill now describes the rules file, the fixed 5 second retry after a failed exit, and shutdown the way the script behaves.

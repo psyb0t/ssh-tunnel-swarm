@@ -1,7 +1,6 @@
 ---
 title: "Troubleshooting"
 description: "ssh-tunnel-swarm error messages and fixes: rules file checks, invalid lines, missing keys, host key failures, refused tunnels and processes left behind."
-nav_order: 7
 ---
 
 # Troubleshooting

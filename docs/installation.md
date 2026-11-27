@@ -1,7 +1,6 @@
 ---
 title: "Installation"
 description: "Install ssh-tunnel-swarm with the downloader script or from source, put it on your PATH, upgrade it and remove it again."
-nav_order: 2
 ---
 
 # Installation

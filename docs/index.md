@@ -1,10 +1,7 @@
 ---
 title: "Home"
 description: "ssh-tunnel-swarm opens many forward and reverse SSH tunnels from one rules file, one ssh process per host, and restarts each one when it fails."
-nav_order: 1
-permalink: /
-seo:
-  type: WebSite
+slug: /
 ---
 
 # ssh-tunnel-swarm

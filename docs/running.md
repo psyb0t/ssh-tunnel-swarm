@@ -1,7 +1,6 @@
 ---
 title: "Running the swarm"
 description: "What ssh-tunnel-swarm runs for each host, how its retry loop behaves, how to stop it cleanly, and how to keep it running under systemd."
-nav_order: 5
 ---
 
 # Running the swarm

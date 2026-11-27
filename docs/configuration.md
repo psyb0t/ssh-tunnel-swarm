@@ -1,7 +1,6 @@
 ---
 title: "Configuration"
 description: "The four ssh-tunnel-swarm environment variables (RULES_FILE, LOG_ENABLED, LOG_FILE, LOG_LEVEL), the log levels and the log line format."
-nav_order: 4
 ---
 
 # Configuration
